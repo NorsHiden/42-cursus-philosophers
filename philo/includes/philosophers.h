@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:46:48 by nelidris          #+#    #+#             */
-/*   Updated: 2022/03/24 17:13:13 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/03/28 15:36:56 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,27 @@ typedef struct philo_s {
     int             time_to_eat;
     int             time_to_sleep;
     int             actual_philo;
+    char            *has_finished;
+    long            *cons_time;
     long            init_time;
     pthread_t       *threads;
+    pthread_mutex_t	death;
+	pthread_mutex_t	message;
     pthread_mutex_t philo_mutex;
     pthread_mutex_t *chopsticks;
 }   philo_t;
 
-
+/*___________UTILS___________*/
+int		ft_atoi(const char *str);
 size_t	ft_strlen(const char *s);
-int	ft_atoi(const char *str);
-
+/*___________ROUTINE___________*/
+void	*philo_routine(void *param);
+/*___________SETUP___________*/
+int		setup_philos(int c, char **v, philo_t *philo);
+int		check_args(int c, char **v);
+/*___________TIME___________*/
+long	right_now(void);
+void	ft_freeze(long	freeze_time);
+/*___________ERRORS___________*/
+void	 throw_error(char *error);
 #endif

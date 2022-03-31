@@ -6,7 +6,7 @@
 #    By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/03/24 10:53:49 by nelidris          #+#    #+#              #
-#    Updated: 2022/03/24 16:32:42 by nelidris         ###   ########.fr        #
+#    Updated: 2022/03/28 15:37:10 by nelidris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,14 +14,14 @@ CC = gcc
 
 CFLAG = -Wall -Wextra -Werror
 
-DEPS = deps/philosophers.c deps/utils.c
+DEPS = deps/philosophers.c deps/utils.c deps/errors.c deps/routine.c deps/setup.c deps/time.c
 
 NAME = philo
 
 all: $(NAME)
 
-$(NAME): deps
-	gcc $(CFLAG) -pthread $(DEPS) -o $(NAME)
+$(NAME): $(DEPS)
+	gcc $(CFLAG) -pthread $(DEPS) -o $(NAME) #-fsanitize=address
 
 clean:
 
