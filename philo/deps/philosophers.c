@@ -6,13 +6,13 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:46:52 by nelidris          #+#    #+#             */
-/*   Updated: 2022/03/29 18:14:35 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/04 20:49:16 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-static int	all_finished(philo_t *philo)
+static int	all_finished(t_philo *philo)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ static int	all_finished(philo_t *philo)
 	return (1);
 }
 
-int	philo_death(philo_t *philo)
+int	philo_death(t_philo *philo)
 {
 	int		i;
 
@@ -34,7 +34,8 @@ int	philo_death(philo_t *philo)
 	while (!all_finished(philo))
 	{
 		pthread_mutex_lock(&philo->death);
-		if (right_now() - philo->cons_time[i] >= philo->time_to_die && !philo->has_finished[i])
+		if (right_now() - philo->cons_time[i] >= philo->time_to_die
+			&& !philo->has_finished[i])
 		{
 			pthread_mutex_lock(&philo->message);
 			printf("%ld ms %d died.\n", right_now() - philo->init_time, i + 1);
@@ -51,12 +52,12 @@ int	philo_death(philo_t *philo)
 
 int	main(int c, char **v)
 {
-	philo_t	*philo;
+	t_philo	*philo;
 	int		i;
 
 	if (c != 5 && c != 6)
 		throw_error("Invalid arguments.\n");
-	philo = (philo_t *)malloc(sizeof(philo_t));
+	philo = (t_philo *)malloc(sizeof(t_philo));
 	if (!philo)
 	{
 		throw_error("Not enough memory is available.\n");

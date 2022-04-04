@@ -6,56 +6,50 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/03/28 15:45:49 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/04 20:49:11 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-static int	setup_alloc(philo_t *philo)
+static int	setup_alloc(t_philo *philo)
 {
 	philo->cons_time = (long *)malloc(sizeof(long) * philo->n_philos);
 	if (!philo->cons_time)
-	{
-		throw_error("Not enough memory is available.\n");
-		return (1);
-	}
+		return (throw_error("Not enough memory is available.\n"));
 	philo->has_finished = (char *)malloc(sizeof(char) * philo->n_philos);
 	if (!philo->has_finished)
-	{
-		throw_error("Not enough memory is available.\n");
-		return (1);
-	}
-	philo->chopsticks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * philo->n_philos);
+		return (throw_error("Not enough memory is available.\n"));
+	philo->chopsticks = (pthread_mutex_t *)malloc(
+			sizeof(pthread_mutex_t) * philo->n_philos);
 	if (!philo->chopsticks)
-	{
-		throw_error("Not enough memory is available.\n");
-		return (1);
-	}
+		return (throw_error("Not enough memory is available.\n"));
 	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->n_philos);
 	if (!philo->threads)
-	{
-		throw_error("Not enough memory is available.\n");
-		return (1);
-	}
+		return (throw_error("Not enough memory is available.\n"));
 	return (0);
 }
 
-int	setup_philos(int c, char **v, philo_t *philo)
+static void	init_vars(char **v, int c, t_philo *philo)
 {
-	int	i;
-
 	philo->n_philos = ft_atoi(v[1]);
 	philo->time_to_die = ft_atoi(v[2]);
 	philo->time_to_eat = ft_atoi(v[3]);
 	philo->time_to_sleep = ft_atoi(v[4]);
-	philo->actual_philo  = 0;
+	philo->actual_philo = 0;
 	if (c == 6)
 		philo->notepme = ft_atoi(v[5]);
 	else
 		philo->notepme = -1;
-	if (philo->n_philos <= 0 || philo->time_to_die <= 0 
-		|| philo->time_to_eat <= 0  || philo->time_to_sleep <= 0
+}
+
+int	setup_philos(int c, char **v, t_philo *philo)
+{
+	int	i;
+
+	init_vars(v, c, philo);
+	if (philo->n_philos <= 0 || philo->time_to_die <= 0
+		|| philo->time_to_eat <= 0 || philo->time_to_sleep <= 0
 		|| philo->notepme == 0)
 	{
 		throw_error("Invalid arguments.\n");
