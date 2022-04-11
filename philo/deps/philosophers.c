@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:46:52 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/04 20:49:16 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/06 17:03:21 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	philo_death(t_philo *philo)
 	i = 0;
 	while (!all_finished(philo))
 	{
-		pthread_mutex_lock(&philo->death);
 		if (right_now() - philo->cons_time[i] >= philo->time_to_die
 			&& !philo->has_finished[i])
 		{
@@ -41,7 +40,6 @@ int	philo_death(t_philo *philo)
 			printf("%ld ms %d died.\n", right_now() - philo->init_time, i + 1);
 			return (1);
 		}
-		pthread_mutex_unlock(&philo->death);
 		if (i + 1 == philo->n_philos)
 			i = 0;
 		else
@@ -56,24 +54,21 @@ int	main(int c, char **v)
 	int		i;
 
 	if (c != 5 && c != 6)
-		throw_error("Invalid arguments.\n");
+		return (throw_error("Invalid arguments.\n"));
 	philo = (t_philo *)malloc(sizeof(t_philo));
 	if (!philo)
-	{
-		throw_error("Not enough memory is available.\n");
-		return (1);
-	}
+		return (throw_error("Not enough memory is available.\n"));
 	if (check_args(c, v) || setup_philos(c, v, philo))
 		return (1);
-	i = 0;
 	philo->init_time = right_now();
+	i = 0;
 	while (i < philo->n_philos)
 	{
 		philo->cons_time[i] = philo->init_time;
 		philo->has_finished[i] = 0;
 		pthread_create(&philo->threads[i], NULL, philo_routine, philo);
-		pthread_detach(philo->threads[i++]);
 		usleep(100);
+		i++;
 	}
 	return (philo_death(philo));
 }

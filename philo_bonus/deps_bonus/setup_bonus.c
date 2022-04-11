@@ -1,72 +1,62 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   setup.c                                            :+:      :+:    :+:   */
+/*   setup_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/06 17:06:13 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/05 18:33:50 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philosophers.h"
+#include "../includes/philosophers_bonus.h"
 
-static int	setup_alloc(t_philo *philo)
+static int	setup_alloc_bonus(t_philo *philo)
 {
-	philo->cons_time = (long *)malloc(sizeof(long) * philo->n_philos);
-	if (!philo->cons_time)
-		return (1);
-	philo->has_finished = (char *)malloc(sizeof(char) * philo->n_philos);
-	if (!philo->has_finished)
-		return (1);
-	philo->chopsticks = (pthread_mutex_t *)malloc(
-			sizeof(pthread_mutex_t) * philo->n_philos);
-	if (!philo->chopsticks)
-		return (1);
-	philo->threads = (pthread_t *)malloc(sizeof(pthread_t) * philo->n_philos);
-	if (!philo->threads)
-		return (1);
+	philo->process = (pid_t *)malloc(sizeof(pid_t) * philo->n_philos);
+	if (!philo->process)
+		return (throw_error_bonus("Not enough memory is available.\n"));
 	return (0);
 }
 
-static void	init_vars(char **v, int c, t_philo *philo)
+static void	init_vars_bonus(char **v, int c, t_philo *philo)
 {
 	philo->n_philos = ft_atoi(v[1]);
 	philo->time_to_die = ft_atoi(v[2]);
 	philo->time_to_eat = ft_atoi(v[3]);
 	philo->time_to_sleep = ft_atoi(v[4]);
 	philo->actual_philo = 0;
+	philo->has_finished = 0;
+	philo->cons_time = 0;
 	if (c == 6)
-	{
 		philo->notepme = ft_atoi(v[5]);
-		if (philo->notepme == -1)
-			philo->notepme = 0;
-	}
 	else
 		philo->notepme = -1;
 }
 
-int	setup_philos(int c, char **v, t_philo *philo)
+int	setup_philos_bonus(int c, char **v, t_philo *philo)
 {
-	int	i;
-
-	init_vars(v, c, philo);
+	init_vars_bonus(v, c, philo);
 	if (philo->n_philos <= 0 || philo->time_to_die <= 0
 		|| philo->time_to_eat <= 0 || philo->time_to_sleep <= 0
-		|| philo->notepme != -1)
-		return (throw_error("Invalid arguments.\n"));
-	if (setup_alloc(philo))
-		return (throw_error("Not enough memory is available.\n"));
-	i = 0;
-	pthread_mutex_init(&philo->philo_mutex, NULL);
-	pthread_mutex_init(&philo->message, NULL);
-	while (i < philo->n_philos)
-		pthread_mutex_init(&philo->chopsticks[i++], NULL);
+		|| philo->notepme == 0)
+	{
+		throw_error_bonus("Invalid arguments.\n");
+		return (1);
+	}
+	if (setup_alloc_bonus(philo))
+		return (1);
+	sem_unlink("philo_sem");
+	sem_unlink("message");
+	sem_unlink("chopsticks");
+	philo->philo_sem = sem_open("philo_sem", O_CREAT, 0644, 1);
+	philo->message = sem_open("message", O_CREAT, 0644, 1);
+	philo->chopsticks = sem_open("chopsticks", O_CREAT, 0644, philo->n_philos);
 	return (0);
 }
 
-int	check_args(int c, char **v)
+int	check_args_bonus(int c, char **v)
 {
 	int	i;
 	int	j;
@@ -80,7 +70,10 @@ int	check_args(int c, char **v)
 		while (v[i][j] >= '0' && v[i][j] <= '9')
 			j++;
 		if (v[i][j])
-			return (throw_error("Invalid arguments.\n"));
+		{
+			throw_error_bonus("Invalid arguments.\n");
+			return (1);
+		}
 		i++;
 	}
 	return (0);
