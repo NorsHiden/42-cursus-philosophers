@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/06 17:06:13 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:19:57 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ static void	init_vars(char **v, int c, t_philo *philo)
 	if (c == 6)
 	{
 		philo->notepme = ft_atoi(v[5]);
-		if (philo->notepme == -1)
-			philo->notepme = 0;
+		if (philo->notepme <= 0)
+			philo->notepme = -2;
 	}
 	else
 		philo->notepme = -1;
@@ -54,7 +54,7 @@ int	setup_philos(int c, char **v, t_philo *philo)
 	init_vars(v, c, philo);
 	if (philo->n_philos <= 0 || philo->time_to_die <= 0
 		|| philo->time_to_eat <= 0 || philo->time_to_sleep <= 0
-		|| philo->notepme != -1)
+		|| philo->notepme < -1)
 		return (throw_error("Invalid arguments.\n"));
 	if (setup_alloc(philo))
 		return (throw_error("Not enough memory is available.\n"));

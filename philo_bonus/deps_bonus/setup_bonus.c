@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/05 18:33:50 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/04/13 16:21:20 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ static void	init_vars_bonus(char **v, int c, t_philo *philo)
 	philo->has_finished = 0;
 	philo->cons_time = 0;
 	if (c == 6)
+	{
 		philo->notepme = ft_atoi(v[5]);
+		if (philo->notepme <= 0)
+			philo->notepme = -2;
+	}
 	else
 		philo->notepme = -1;
 }
@@ -40,7 +44,7 @@ int	setup_philos_bonus(int c, char **v, t_philo *philo)
 	init_vars_bonus(v, c, philo);
 	if (philo->n_philos <= 0 || philo->time_to_die <= 0
 		|| philo->time_to_eat <= 0 || philo->time_to_sleep <= 0
-		|| philo->notepme == 0)
+		|| philo->notepme < -1)
 	{
 		throw_error_bonus("Invalid arguments.\n");
 		return (1);
