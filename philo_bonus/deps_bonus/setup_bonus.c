@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/13 16:21:20 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/05/10 09:35:45 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,7 @@ int	setup_philos_bonus(int c, char **v, t_philo *philo)
 	if (philo->n_philos <= 0 || philo->time_to_die <= 0
 		|| philo->time_to_eat <= 0 || philo->time_to_sleep <= 0
 		|| philo->notepme < -1)
-	{
-		throw_error_bonus("Invalid arguments.\n");
-		return (1);
-	}
+		return (throw_error_bonus("Invalid arguments.\n"));
 	if (setup_alloc_bonus(philo))
 		return (1);
 	sem_unlink("philo_sem");

@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/24 10:46:48 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/05 18:25:01 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/05/10 14:33:26 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@
 
 typedef struct t_philo {
 	int				notepme;
+	int				*notepme_meals;
 	int				n_philos;
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				actual_philo;
-	char			*has_finished;
+	int				all_meals;
 	long			*cons_time;
 	long			init_time;
 	pthread_t		*threads;

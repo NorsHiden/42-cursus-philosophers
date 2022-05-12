@@ -6,7 +6,7 @@
 /*   By: nelidris <nelidris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/27 07:59:28 by nelidris          #+#    #+#             */
-/*   Updated: 2022/04/13 16:19:57 by nelidris         ###   ########.fr       */
+/*   Updated: 2022/05/10 14:33:13 by nelidris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static int	setup_alloc(t_philo *philo)
 	philo->cons_time = (long *)malloc(sizeof(long) * philo->n_philos);
 	if (!philo->cons_time)
 		return (1);
-	philo->has_finished = (char *)malloc(sizeof(char) * philo->n_philos);
-	if (!philo->has_finished)
+	philo->notepme_meals = (int *)malloc(sizeof(int) * philo->n_philos);
+	if (!philo->notepme_meals)
 		return (1);
 	philo->chopsticks = (pthread_mutex_t *)malloc(
 			sizeof(pthread_mutex_t) * philo->n_philos);
@@ -37,6 +37,7 @@ static void	init_vars(char **v, int c, t_philo *philo)
 	philo->time_to_eat = ft_atoi(v[3]);
 	philo->time_to_sleep = ft_atoi(v[4]);
 	philo->actual_philo = 0;
+	philo->all_meals = 1;
 	if (c == 6)
 	{
 		philo->notepme = ft_atoi(v[5]);
